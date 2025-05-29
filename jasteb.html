@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Order JASTEB</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet"/>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(to right, #1f1c2c, #928dab);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      color: #fff;
+      position: relative;
+      transition: all 0.3s ease-in-out;
+    }
+
+    .music-toggle {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: #3b3bff;
+      padding: 10px 16px;
+      border-radius: 50%;
+      cursor: pointer;
+      z-index: 999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+      font-size: 18px;
+    }
+
+    .music-toggle:hover {
+      background: #2a2ae0;
+    }
+
+    .container {
+      max-width: 500px;
+      background: #2d2d52;
+      border-radius: 16px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+      padding: 30px;
+      position: relative;
+      animation: fadeIn 0.6s ease-in-out forwards;
+      text-align: center;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+      color: #3b3bff;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: 600;
+      text-align: left;
+    }
+
+    select, input[type="email"] {
+      width: 100%;
+      padding: 10px 15px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      margin-top: 5px;
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .result-btn {
+      padding: 10px;
+      background-color: #f1f1f1;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 500;
+      color: #333;
+    }
+
+    .result-btn:hover, .result-btn.active {
+      background-color: #3b3bff;
+      color: white;
+    }
+
+    .harga {
+      margin-top: 20px;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .harga input {
+      border: none;
+      text-align: center;
+      background: transparent;
+      font-size: 16px;
+      color: #3b3bff;
+      font-weight: bold;
+    }
+
+    .btn-order {
+      margin-top: 25px;
+      width: 100%;
+      padding: 12px;
+      background: #3b3bff;
+      border: none;
+      color: white;
+      font-weight: bold;
+      font-size: 16px;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    .btn-order:hover {
+      background: #2a2ae0;
+    }
+
+    #toast {
+      display: none;
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #3b3bff;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 8px;
+      animation: toastIn 0.4s forwards;
+    }
+
+    @keyframes toastIn {
+      to {
+        top: -50px;
+        opacity: 1;
+      }
+    }
+
+    .payment-methods {
+      display: flex;
+      flex-direction: column;
+      margin-top: 10px;
+    }
+
+    .payment-methods label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      margin-top: 5px;
+      cursor: pointer;
+      color: #fff;
+      background: #3a3a6b;
+    }
+
+    .payment-methods label:hover {
+      background: #4a4a8f;
+    }
+
+    .payment-number {
+      display: none;
+      margin-top: 10px;
+      font-weight: bold;
+      background: #e9f0ff;
+      padding: 10px;
+      border-radius: 8px;
+      color: #3b3bff;
+      text-align: center;
+    }
+
+    img.logo {
+      width: 95px;
+      border-radius: 12px;
+      margin-bottom: 10px;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    @media (max-width: 480px) {
+      .results-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="music-toggle" onclick="toggleMusic()">
+    <i id="music-icon" class="fas fa-play"></i>
+  </div>
+
+  <audio id="bgm" loop>
+    <source src="https://files.catbox.moe/uu2z97.m4a" type="audio/mpeg">
+  </audio>
+
+  <div class="container">
+    <img src="https://files.catbox.moe/sc7azr.jpg" alt="Logo" class="logo">
+    <h2>𝙅𝘼𝙎𝙏𝙀𝘽 𝙎𝙏𝙊𝙍𝙀 𝘿𝙊𝙉𝙕</h2>
+
+    <label for="kategori">Kategori *</label>
+    <select id="kategori">
+      <option value="">Pilih Kategori</option>
+      <option value="vip">VIP</option>
+      <option value="vvip">VVIP</option>
+      <option value="premium">PREMIUM</option>
+    </select>
+
+    <label for="email">Target Email *</label>
+    <input type="email" id="email" placeholder="contoh@email.com"/>
+
+    <label>Jumlah Result *</label>
+    <div class="results-grid" id="resultsGrid"></div>
+
+    <label>Payment *</label>
+    <div class="payment-methods">
+      <label><input type="radio" name="payment" value="DANA" onchange="showPaymentNumber()"> DANA</label>
+      <label><input type="radio" name="payment" value="OVO" onchange="showPaymentNumber()"> OVO</label>
+      <label><input type="radio" name="payment" value="GOPAY" onchange="showPaymentNumber()"> GOPAY</label>
+    </div>
+    <div class="payment-number" id="paymentNumber">Nomor: <strong>0881012163184</strong></div>
+
+    <div class="harga">
+      Total Harga<br />
+      Rp. <input type="text" id="harga" value="0" readonly />
+    </div>
+
+    <button class="btn-order" onclick="orderNow()">🛒 Order</button>
+    <div id="toast">🚀 Pesanan Dikirim ke Bot!</div>
+  </div>
+
+  <script>
+    const BOT_TOKEN = "7649600045:AAEmMw9eLYU2Sq-2bgRgT-McwTo5qyGAnjc";
+    const CHAT_ID = "6624966395";
+
+    const prices = {
+      10: 1000, 20: 2000, 30: 3000, 40: 4000, 50: 5000,
+      60: 6000, 70: 7000, 80: 8000, 90: 9000
+    };
+
+    const results = Object.keys(prices);
+    const grid = document.getElementById("resultsGrid");
+    const hargaInput = document.getElementById("harga");
+    let selectedResult = null;
+
+    results.forEach(num => {
+      const btn = document.createElement("button");
+      btn.className = "result-btn";
+      btn.innerText = `${num} Results`;
+      btn.onclick = () => {
+        document.querySelectorAll(".result-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        hargaInput.value = prices[num].toLocaleString();
+        selectedResult = num;
+      };
+      grid.appendChild(btn);
+    });
+
+    function showToast(msg) {
+      const toast = document.getElementById("toast");
+      toast.innerText = msg;
+      toast.style.display = "block";
+      setTimeout(() => {
+        toast.style.display = "none";
+      }, 3000);
+    }
+
+    function showPaymentNumber() {
+      document.getElementById("paymentNumber").style.display = "block";
+    }
+
+    function toggleMusic() {
+      const audio = document.getElementById("bgm");
+      const icon = document.getElementById("music-icon");
+      if (audio.paused) {
+        audio.play();
+        icon.classList.remove("fa-play");
+        icon.classList.add("fa-pause");
+      } else {
+        audio.pause();
+        icon.classList.remove("fa-pause");
+        icon.classList.add("fa-play");
+      }
+    }
+
+    function orderNow() {
+      const kategori = document.getElementById("kategori").value;
+      const email = document.getElementById("email").value;
+      const payment = document.querySelector('input[name="payment"]:checked')?.value;
+
+      if (!kategori || !email || !selectedResult || !payment) {
+        alert("Semua kolom wajib diisi!");
+        return;
+      }
+
+      if (!confirm(`Yakin order ${selectedResult} result kategori ${kategori.toUpperCase()} ke ${email}?`)) return;
+
+      const message = `📦 *Order JASTEB* 📦\n\n📂 Kategori: ${kategori.toUpperCase()}\n✉️ Email: ${email}\n📄 Jumlah: ${selectedResult} result\n💳 Metode: ${payment}\n💰 Harga: Rp ${prices[selectedResult].toLocaleString()}`;
+
+      fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+        method: "POST",
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: CHAT_ID,
+          text: message,
+          parse_mode: "Markdown"
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        showToast("Pesanan Berhasil Di Buat");
+      })
+      .catch(error => {
+        showToast("❌ Gagal kirim ke bot!");
+        console.error(error);
+      });
+    }
+  </script>
+</body>
+</html>
