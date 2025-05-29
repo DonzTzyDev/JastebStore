@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Donz Jasteb</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet"/>
+  <style>
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(to right, #1f1c2c, #928dab);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      overflow: hidden;
+      color: #fff;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(15px);
+      border-radius: 20px;
+      padding: 40px;
+      text-align: center;
+      box-shadow: 0 0 20px rgba(0,0,0,0.4);
+      animation: fadeIn 1s ease;
+      max-width: 400px;
+      width: 90%;
+    }
+
+    h1 {
+      font-size: 2em;
+      margin-bottom: 10px;
+      background: linear-gradient(45deg, #0fff, #a0f);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    p {
+      font-size: 1rem;
+      margin-bottom: 30px;
+    }
+
+    button {
+      padding: 12px 25px;
+      font-size: 1rem;
+      font-weight: bold;
+      border: none;
+      border-radius: 30px;
+      background: linear-gradient(to right, #6a11cb, #2575fc);
+      color: white;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .footer {
+      margin-top: 20px;
+      font-size: 0.85rem;
+      color: #ddd;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+      <img src="https://files.catbox.moe/sc7azr.jpg" alt="Logo" style="width: 100px; border-radius: 12px; margin-bottom: 10px;">
+    <h1>𝙅𝘼𝙎𝙏𝙀𝘽 𝙎𝙏𝙊𝙍𝙀</h1>
+    <p>Selamat datang Jasteb Store!</p>
+    <p>Jasteb Bisa Mendapatkan Akun Game Jika Anda Hoki</p>
+    <button onclick="window.location.href='jasteb.html'">Order Sekarang</button>
+    <div class="footer">DonzTxz Is Here &copy 2025</div>
+  </div>
+
+</body>
+</html>
