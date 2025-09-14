@@ -1,9 +1,195 @@
 <!DOCTYPE html>
-<html>
-<head><meta charset="UTF-8"><title>Encrypted</title></head>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Pembaca Bahasa Isyarat</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+    }
+    #video, #canvas {
+      border: 2px solid #333;
+      border-radius: 10px;
+      margin: 15px auto;
+      max-width: 100%;
+      height: auto;
+    }
+    #output {
+      font-size: 24px;
+      font-weight: bold;
+      color: #2c3e50;
+      margin: 20px;
+      padding: 15px;
+      background: white;
+      border-radius: 10px;
+      min-height: 60px;
+    }
+    #status {
+      color: #e74c3c;
+      font-style: italic;
+    }
+    button {
+      padding: 12px 24px;
+      font-size: 18px;
+      background: #3498db;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin: 10px;
+    }
+    button:disabled {
+      background: #bdc3c7;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
 <body>
-<script>
-document.write(decodeURIComponent(escape(atob("PCFET0NUWVBFIGh0bWw+CjxodG1sIGxhbmc9ImlkIj4KPGhlYWQ+CiAgPG1ldGEgY2hhcnNldD0iVVRGLTgiIC8+CiAgPG1ldGEgbmFtZT0idmlld3BvcnQiIGNvbnRlbnQ9IndpZHRoPWRldmljZS13aWR0aCwgaW5pdGlhbC1zY2FsZT0xLjAiLz4KICA8dGl0bGU+RG9ueiBKYXN0ZWI8L3RpdGxlPgogIDxsaW5rIGhyZWY9Imh0dHBzOi8vZm9udHMuZ29vZ2xlYXBpcy5jb20vY3NzMj9mYW1pbHk9UG9wcGluczp3Z2h0QDQwMDs2MDAmZGlzcGxheT1zd2FwIiByZWw9InN0eWxlc2hlZXQiLz4KICA8c3R5bGU+CiAgICAqIHsKICAgICAgbWFyZ2luOiAwOyBwYWRkaW5nOiAwOyBib3gtc2l6aW5nOiBib3JkZXItYm94OwogICAgICBmb250LWZhbWlseTogJ1BvcHBpbnMnLCBzYW5zLXNlcmlmOwogICAgfQoKICAgIGJvZHkgewogICAgICBiYWNrZ3JvdW5kOiBsaW5lYXItZ3JhZGllbnQodG8gcmlnaHQsICMxZjFjMmMsICM5MjhkYWIpOwogICAgICBkaXNwbGF5OiBmbGV4OwogICAgICBqdXN0aWZ5LWNvbnRlbnQ6IGNlbnRlcjsKICAgICAgYWxpZ24taXRlbXM6IGNlbnRlcjsKICAgICAgbWluLWhlaWdodDogMTAwdmg7CiAgICAgIG92ZXJmbG93OiBoaWRkZW47CiAgICAgIGNvbG9yOiAjZmZmOwogICAgfQoKICAgIC5jYXJkIHsKICAgICAgYmFja2dyb3VuZDogcmdiYSgyNTUsMjU1LDI1NSwwLjEpOwogICAgICBiYWNrZHJvcC1maWx0ZXI6IGJsdXIoMTVweCk7CiAgICAgIGJvcmRlci1yYWRpdXM6IDIwcHg7CiAgICAgIHBhZGRpbmc6IDQwcHg7CiAgICAgIHRleHQtYWxpZ246IGNlbnRlcjsKICAgICAgYm94LXNoYWRvdzogMCAwIDIwcHggcmdiYSgwLDAsMCwwLjQpOwogICAgICBhbmltYXRpb246IGZhZGVJbiAxcyBlYXNlOwogICAgICBtYXgtd2lkdGg6IDQwMHB4OwogICAgICB3aWR0aDogOTAlOwogICAgfQoKICAgIGgxIHsKICAgICAgZm9udC1zaXplOiAyZW07CiAgICAgIG1hcmdpbi1ib3R0b206IDEwcHg7CiAgICAgIGJhY2tncm91bmQ6IGxpbmVhci1ncmFkaWVudCg0NWRlZywgIzBmZmYsICNhMGYpOwogICAgICAtd2Via2l0LWJhY2tncm91bmQtY2xpcDogdGV4dDsKICAgICAgLXdlYmtpdC10ZXh0LWZpbGwtY29sb3I6IHRyYW5zcGFyZW50OwogICAgfQoKICAgIHAgewogICAgICBmb250LXNpemU6IDFyZW07CiAgICAgIG1hcmdpbi1ib3R0b206IDMwcHg7CiAgICB9CgogICAgYnV0dG9uIHsKICAgICAgcGFkZGluZzogMTJweCAyNXB4OwogICAgICBmb250LXNpemU6IDFyZW07CiAgICAgIGZvbnQtd2VpZ2h0OiBib2xkOwogICAgICBib3JkZXI6IG5vbmU7CiAgICAgIGJvcmRlci1yYWRpdXM6IDMwcHg7CiAgICAgIGJhY2tncm91bmQ6IGxpbmVhci1ncmFkaWVudCh0byByaWdodCwgIzZhMTFjYiwgIzI1NzVmYyk7CiAgICAgIGNvbG9yOiB3aGl0ZTsKICAgICAgY3Vyc29yOiBwb2ludGVyOwogICAgICB0cmFuc2l0aW9uOiB0cmFuc2Zvcm0gMC4zcyBlYXNlOwogICAgfQoKICAgIGJ1dHRvbjpob3ZlciB7CiAgICAgIHRyYW5zZm9ybTogc2NhbGUoMS4wNSk7CiAgICB9CgogICAgQGtleWZyYW1lcyBmYWRlSW4gewogICAgICBmcm9tIHsgb3BhY2l0eTogMDsgdHJhbnNmb3JtOiB0cmFuc2xhdGVZKDIwcHgpOyB9CiAgICAgIHRvIHsgb3BhY2l0eTogMTsgdHJhbnNmb3JtOiB0cmFuc2xhdGVZKDApOyB9CiAgICB9CgogICAgLmZvb3RlciB7CiAgICAgIG1hcmdpbi10b3A6IDIwcHg7CiAgICAgIGZvbnQtc2l6ZTogMC44NXJlbTsKICAgICAgY29sb3I6ICNkZGQ7CiAgICB9CiAgPC9zdHlsZT4KPC9oZWFkPgo8Ym9keT4KCiAgPGRpdiBjbGFzcz0iY2FyZCI+CiAgICAgIDxpbWcgc3JjPSJodHRwczovL2ZpbGVzLmNhdGJveC5tb2Uvc2M3YXpyLmpwZyIgYWx0PSJMb2dvIiBzdHlsZT0id2lkdGg6IDEwMHB4OyBib3JkZXItcmFkaXVzOiAxMnB4OyBtYXJnaW4tYm90dG9tOiAxMHB4OyI+CiAgICA8aDE+8J2ZhfCdmLzwnZmO8J2Zj/CdmYDwnZi9IPCdmY7wnZmP8J2ZivCdmY3wnZmAPC9oMT4KICAgIDxwPlNlbGFtYXQgZGF0YW5nIEphc3RlYiBTdG9yZSE8L3A+CiAgICA8cD5KYXN0ZWIgQmlzYSBNZW5kYXBhdGthbiBBa3VuIEdhbWUgSmlrYSBBbmRhIEhva2k8L3A+CiAgICA8YnV0dG9uIG9uY2xpY2s9IndpbmRvdy5sb2NhdGlvbi5ocmVmPSdqYXN0ZWIuaHRtbCciPk9yZGVyIFNla2FyYW5nPC9idXR0b24+CiAgICA8ZGl2IGNsYXNzPSJmb290ZXIiPkRvbnpUeHogSXMgSGVyZSAmY29weSAyMDI1PC9kaXY+CiAgPC9kaXY+Cgo8L2JvZHk+CjwvaHRtbD4="))));
-</script>
+
+  <h1>🗣️ AI Pembaca Bahasa Isyarat (BISINDO)</h1>
+  <p>Hadapkan tanganmu ke kamera, tunjukkan isyarat seperti "SAYA", "TERIMA KASIH", dll.</p>
+
+  <div id="status">Mengaktifkan kamera...</div>
+  <video id="video" width="640" height="480" autoplay muted></video>
+  <canvas id="canvas" width="640" height="480" style="display:none;"></canvas>
+
+  <div id="output">Teks akan muncul di sini...</div>
+
+  <button id="btnSpeak">Ucapkan Suara</button>
+  <button id="btnStop">Hentikan</button>
+
+  <!-- Load MediaPipe Hands -->
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
+  <script>
+    // --- ELEMEN DOM ---
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    const output = document.getElementById('output');
+    const status = document.getElementById('status');
+    const btnSpeak = document.getElementById('btnSpeak');
+    const btnStop = document.getElementById('btnStop');
+
+    // --- TEXT TO SPEECH ---
+    const speech = window.speechSynthesis;
+    let lastDetected = "";
+
+    // --- MEDIAPIPE HANDS ---
+    const hands = new Hands({
+      locateFile: (file) => {
+        return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
+      }
+    });
+
+    hands.setOnResults(onResults);
+
+    // --- START CAMERA ---
+    async function startCamera() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ 
+          video: { width: 640, height: 480 } 
+        });
+        video.srcObject = stream;
+        status.textContent = "Kamera aktif. Tunjukkan isyarat...";
+      } catch (err) {
+        status.textContent = "Gagal akses kamera: " + err.message;
+        console.error(err);
+      }
+    }
+
+    // --- PROSES HASIL DETEKSI TANGAN ---
+    function onResults(results) {
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      ctx.drawImage(results.image, 0, 0, canvas.width, canvas.height);
+
+      if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
+        const landmarks = results.multiHandLandmarks[0]; // Ambil tangan pertama
+
+        // --- DETEKSI ISYARAT SEDERHANA (CONTOH) ---
+        const thumbTip = landmarks[4];   // Ujung ibu jari
+        const indexTip = landmarks[8];   // Ujung telunjuk
+        const middleTip = landmarks[12]; // Ujung jari tengah
+        const ringTip = landmarks[16];   // Ujung jari manis
+        const pinkyTip = landmarks[20];  // Ujung kelingking
+
+        // Contoh: Jika semua jari terangkat = "SAYA"
+        const allFingersUp = 
+          thumbTip.y < landmarks[2].y &&
+          indexTip.y < landmarks[6].y &&
+          middleTip.y < landmarks[10].y &&
+          ringTip.y < landmarks[14].y &&
+          pinkyTip.y < landmarks[18].y;
+
+        // Contoh: Jika hanya telunjuk naik = "SATU"
+        const indexOnlyUp = 
+          indexTip.y < landmarks[6].y &&
+          middleTip.y > landmarks[10].y &&
+          ringTip.y > landmarks[14].y &&
+          pinkyTip.y > landmarks[18].y &&
+          thumbTip.y > landmarks[2].y;
+
+        let detectedWord = "";
+
+        if (allFingersUp) detectedWord = "SAYA";
+        else if (indexOnlyUp) detectedWord = "SATU";
+        else if (thumbTip.x < indexTip.x && thumbTip.y < indexTip.y) detectedWord = "TERIMA KASIH"; // Simulasi isyarat "terima kasih"
+
+        // Tampilkan jika berbeda dari sebelumnya
+        if (detectedWord && detectedWord !== lastDetected) {
+          lastDetected = detectedWord;
+          output.textContent = detectedWord;
+          status.textContent = "Dikenali: " + detectedWord;
+        }
+      } else {
+        if (lastDetected) {
+          status.textContent = "Tangan tidak terdeteksi...";
+        }
+      }
+    }
+
+    // --- START MEDIAPIPE ---
+    video.addEventListener('play', () => {
+      hands.send({ image: video });
+    });
+
+    // --- LOOP DETECTION ---
+    function loop() {
+      if (video.readyState === video.HAVE_ENOUGH_DATA) {
+        hands.send({ image: video });
+      }
+      requestAnimationFrame(loop);
+    }
+
+    // --- EVENT LISTENERS ---
+    btnSpeak.addEventListener('click', () => {
+      if (lastDetected) {
+        const utterance = new SpeechSynthesisUtterance(lastDetected);
+        utterance.lang = 'id-ID';
+        speech.speak(utterance);
+      }
+    });
+
+    btnStop.addEventListener('click', () => {
+      lastDetected = "";
+      output.textContent = "Teks akan muncul di sini...";
+      status.textContent = "Dihentikan.";
+    });
+
+    // --- INIT ---
+    startCamera();
+    loop();
+
+    // --- CEK SUPPORT TTS ---
+    if (!speech) {
+      status.textContent = "Peringatan: Text-to-Speech tidak didukung di browser ini.";
+    }
+  </script>
+
 </body>
 </html>
